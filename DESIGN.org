@@ -1,0 +1,8 @@
+* McKak
+  [[https://github.com/magnars/multiple-cursors.el][Multiple cursors]] is an Emacs package that enables having multiple cursors in a buffer and working on them simultaneously.
+  [[https://github.com/mawww/kakoune][Kakoune]] is an editor inspired by Vim with some excellent design decisions. It works on multiple selections like no other editor.
+  McKak is the marriage of these 2 ideas that creates a great emacs experience for working with multiple selections. Even though we take many ideas and bindings from vim and kakoune we are not strictly following all definitions, so don't expect *exact* compatibility either way. If you know vim you won't have trouble adapting though, we expect the concepts will be easy to learn since they are simple and natural.
+
+** TODO Modes
+   In McKak there are 2 modes - selection and insertion. Selection mode can be thought of as a mixture of vim's normal and visual mode. McKak works with 1 or many selections and performs operations on them. As an example - vim's =cw= (change word mnemonic) becomes =wc= in McKak (or kakoune). Why swap the order you ask? There's 2 reasons why we like this. Firstly it enables multiple cursors to work naturally - you make the cursors/selections and issue an operation on them. Secondly it is more visual. After all we are /looking/ at the text so it's nice to have visual feedback. For us this feels as a more natural editing experience. But don't believe us, go and try it out for yourself!
+   Insertion mode is basically plain emacs for now. Emacs has great keybindings when it comes to quick line-level navigation (this is what most of us use in our terminal, shortucts like =C-u=, =M-d=, =C-a=, =M-f= etc).
