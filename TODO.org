@@ -1,0 +1,32 @@
+* What is left?
+** Motion commands
+*** TODO search commands [0/2]
+- [ ] f
+- [ ] /
+*** TODO line commands [0/3]
+- [ ] goto/select to end of line
+- [ ] goto/select to beginning of line
+- [ ] extend selection to whole line
+*** TODO other commands [0/11]
+- [ ] % - select whole buffer
+- [ ] ` - change case
+- [ ] ' - rotate main selection
+- [ ] ; - reduce selections to their cursor
+- [ ] y
+- [ ] p
+- [ ] m
+- [ ] o
+- [ ] q
+- [ ] g
+- [ ] u
+** TODO Editing commands [0/0]
+- [ ] c
+- [ ] d
+- [ ] i
+- [ ] a
+- [ ] r
+- [ ] R
+** TODO Minor mode setup
+Right now the minor mode is simply run globally which is, well, bad :) It should only run on /normal/ buffers, i.e. skip minibuffer, special modes, stuff like that. Maybe we should look into how evil does this.
+** Spacemacs integration
+Ideally this would be another editing style, but not sure if that's possible. For now (I THINK) it would be enough to provide a spacemacs layer that could be enabled in emacs mode. This way we could simply include this mode and possibly fall back to some of evil's nicities later.
