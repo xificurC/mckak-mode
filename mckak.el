@@ -5,28 +5,44 @@
 (defun mk--select-to-next-word-start (keep)
   "Selects/extends up to next word start."
   (mk--with-selection-option keep
-                             (skip-syntax-forward "w")
-                             (skip-syntax-forward "^w")))
-
-(defun mk--select-to-next-word-start (count &optional keep)
-  "Selects up to next word start."
-  (dotimes (_ count)
-    (unless (and keep mark-active)
-      (set-mark (point)))
     (skip-syntax-forward "w")
     (skip-syntax-forward "^w")))
 
-(defun mk/select-to-next-word-start (&optional count)
-  "Selects up to next word start."
-  (interactive "p")
-  (setq count (or count 1))
-  (mk--select-to-next-word-start count))
+(defun mk-select-to-next-word-start (keep count)
+  (dotimes (_ count)
+    (mk--select-to-next-word-start keep)))
 
-(defun mk/select-to-next-word-start-keep (&optional count)
-  "Selects up to next word start, adding to the selection."
+(defun mk/select-to-next-word-start (&optional count)
+  "Selects up to COUNT'th word start."
   (interactive "p")
   (setq count (or count 1))
-  (mk--select-to-next-word-start count t))
+  (mk-select-to-next-word-start :select count))
+
+(defun mk/select-to-next-word-start-extend (&optional count)
+  "Extends up to COUNT'th word start."
+  (interactive "p")
+  (setq count (or count 1))
+  (mk-select-to-next-word-start :extend count))
+
+;; (defun mk--select-to-next-word-start (count &optional keep)
+;;   "Selects up to next word start."
+;;   (dotimes (_ count)
+;;     (unless (and keep mark-active)
+;;       (set-mark (point)))
+;;     (skip-syntax-forward "w")
+;;     (skip-syntax-forward "^w")))
+
+;; (defun mk/select-to-next-word-start (&optional count)
+;;   "Selects up to next word start."
+;;   (interactive "p")
+;;   (setq count (or count 1))
+;;   (mk--select-to-next-word-start count))
+
+;; (defun mk/select-to-next-word-start-keep (&optional count)
+;;   "Selects up to next word start, adding to the selection."
+;;   (interactive "p")
+;;   (setq count (or count 1))
+;;   (mk--select-to-next-word-start count t))
 
 (defun mk--select-to-next-word-end (count &optional keep)
   "Selects up to next word end."
@@ -209,7 +225,7 @@
 (define-key mckak-mode-map (kbd "M-s") 'mc/edit-lines)
 (define-key mckak-mode-map "s"         'mc/mark-all-in-region-regexp)
 (define-key mckak-mode-map "&"         'mc/vertical-align-with-space)
-(define-key mckak-mode-map "W"         'mk/select-to-next-word-start-keep)
+(define-key mckak-mode-map "W"         'mk/select-to-next-word-start-extend)
 (define-key mckak-mode-map "E"         'mk/select-to-next-word-end-keep)
 (define-key mckak-mode-map "J"         'mk/next-line-keep)
 (define-key mckak-mode-map "K"         'mk/previous-line-keep)
