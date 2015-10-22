@@ -29,33 +29,42 @@
       (princ a))))
 
 (defun symb (&rest args)
-  (make-symbol (apply #'mkstr args)))
+  (intern (apply #'mkstr args)))
 
-(defun mk--defmotion (name doc motion body)
-  `(defun ,(symb 'mk/ motion '- name) (&optional count)
-     ,(ecase motion
-        (select (mkstr "Selects COUNT'th " doc))
-        (extend (mkstr "Extends current selection to COUNT'th " doc))
-        (move (mkstr "Moves to COUNT'th " doc)))
-     (interactive "p")
-     (setq count (or count 1))
-     (dotimes (_ count)
-       ,@body)))
+(defun mk--defmotion (name args doc motion body)
+  (let* ((has-interactive (and (listp (car body))
+                               (eq 'interactive (caar body))))
+         (inter (if has-interactive (car body) '(interactive "p")))
+         (body (if has-interactive (cdr body) body))
+         (body (case motion
+                 (select `(mk/create-selection ,@body))
+                 (extend `(mk/extend-selection ,@body))
+                 (move `(mk/move ,@body)))))
+    `(defun ,(symb 'mk/ motion '- name) ,args
+       ,(ecase motion
+          (select (mkstr "Selects COUNT'th " doc))
+          (extend (mkstr "Extends current selection to COUNT'th " doc))
+          (move (mkstr "Moves to COUNT'th " doc)))
+       ,inter
+       (setq count (or count 1))
+       (dotimes (_ count)
+         ,body))))
 
-(defmacro mk/defmotion (name doc motions &rest body)
+(defmacro mk/defmotion (name args doc motions &rest body)
   "Generates definitions for MOTIONS.
 
 NAME is the suffix of the defun's name.
+ARGS is a list of arguments used.
 DOC is the variable part of the docstring.
 MOTIONS is a list of 'select, 'extend or 'move.
 A defun will be generated for each motion.
 BODY is the variable part of defun's body. "
-  (declare (indent 3))
-  (dolist (motion motions)
-    (mk--defmotion name doc motion body)))
+  (declare (indent 2))
+  `(progn
+     ,@(mapcar (lambda (motion)
+                 (mk--defmotion name args doc motion body))
+               motions)))
 
-(mk/defmotion to-next-word-start "word start" (select move)
-  (skip-syntax-forward "w")
-  (skip-syntax-forward "^w"))
+
 
 (provide 'mk-macros)
