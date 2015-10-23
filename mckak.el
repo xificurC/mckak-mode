@@ -2,50 +2,50 @@
 (require 'cl)
 (require 'mk-macros)
 
-(mk/defmotion to-next-word-start (&optional count)
+(mk/defmotion to-next-word-start ()
   "word start"
   (select extend)
   (skip-syntax-forward "w")
   (skip-syntax-forward "^w"))
 
-(mk/defmotion to-next-word-end (&optional count)
+(mk/defmotion to-next-word-end ()
   "word end"
   (select extend)
   (skip-syntax-forward "^w")
   (skip-syntax-forward "w"))
 
-(mk/defmotion to-previous-word-start (&optional count)
+(mk/defmotion to-previous-word-start ()
   "previous word start"
   (select extend)
   (skip-syntax-backward "^w")
   (skip-syntax-backward "w"))
 
-(mk/defmotion to-previous-word-end (&optional count)
+(mk/defmotion to-previous-word-end ()
   "previous word end"
   (select extend)
   (skip-syntax-backward "w")
   (skip-syntax-backward "^w"))
 
-(mk/defmotion to-next-char (&optional count)
+(mk/defmotion to-next-char ()
   "character"
   (move extend)
   (save-restriction
     (narrow-to-region (point) (line-end-position))
     (ignore-errors (forward-char))))
 
-(mk/defmotion to-previous-char (&optional count)
+(mk/defmotion to-previous-char ()
   "previous character"
   (move extend)
   (save-restriction
     (narrow-to-region (point) (line-beginning-position))
     (ignore-errors (backward-char))))
 
-(mk/defmotion to-next-line (&optional count)
+(mk/defmotion to-next-line ()
   "line"
   (move extend)
   (next-line))
 
-(mk/defmotion to-previous-line (&optional count)
+(mk/defmotion to-previous-line ()
   "previous line"
   (move extend)
   (previous-line))

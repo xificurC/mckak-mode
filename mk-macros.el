@@ -35,6 +35,7 @@
   (let* ((has-interactive (and (listp (car body))
                                (eq 'interactive (caar body))))
          (inter (if has-interactive (car body) '(interactive "p")))
+         (args (or args '(&optional count)))
          (body (if has-interactive (cdr body) body))
          (body (case motion
                  (select `(mk/create-selection ,@body))
@@ -64,7 +65,5 @@ BODY is the variable part of defun's body. "
      ,@(mapcar (lambda (motion)
                  (mk--defmotion name args doc motion body))
                motions)))
-
-
 
 (provide 'mk-macros)
