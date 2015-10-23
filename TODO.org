@@ -1,7 +1,7 @@
 * What is left?
 ** Motion commands
-*** TODO search commands [0/2]
-- [ ] f
+*** TODO search commands [1/2]
+- [X] f
 - [ ] /
 *** TODO line commands [0/3]
 - [ ] goto/select to end of line

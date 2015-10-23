@@ -53,8 +53,24 @@
 (mk/defmotion to-next-found-char (char &optional count)
   "found character"
   (select extend)
-  (interactive "p\ncChar:")
-  (search-forward (char-to-string char) (line-end-position) t))
+  (interactive "cChar:\np")
+  (let ((start (point)) case-fold-search)
+    (condition-case nil
+        (progn
+          (mk/move-to-next-char)
+          (search-forward (char-to-string char) (line-end-position)))
+      (error (goto-char start)))))
+
+(mk/defmotion to-previous-found-char (char &optional count)
+  "previous found character"
+  (select extend)
+  (interactive "cChar:\np")
+  (let ((start (point)) case-fold-search)
+    (condition-case nil
+        (progn
+          (mk/move-to-previous-char)
+          (search-backward (char-to-string char) (line-beginning-position)))
+      (error (goto-char start)))))
 
 (defvar mckak-mode-map (make-sparse-keymap) "McKak mode's keymap")
 (suppress-keymap mckak-mode-map)
@@ -80,6 +96,8 @@
 (define-key mckak-mode-map "B"         'mk/extend-to-previous-word-start)
 (define-key mckak-mode-map "V"         'mk/extend-to-previous-word-end)
 (define-key mckak-mode-map "F"         'mk/extend-to-next-found-char)
+(define-key mckak-mode-map (kbd "M-f") 'mk/select-to-previous-found-char)
+(define-key mckak-mode-map (kbd "M-F") 'mk/extend-to-previous-found-char)
 
 (dotimes (i 10)
   (define-key mckak-mode-map (number-to-string i) 'digit-argument))
