@@ -1,8 +1,10 @@
 * What is left?
 ** Motion commands
-*** TODO search commands [1/2]
+*** TODO search commands [2/2]
 - [X] f
-- [ ] /
+- [X] / (partially through phi-search)
+  Need to find out how to make phi-search select the found string(s).
+  Explore [[https://github.com/knu/phi-search-mc.el][phi-search-mc]]
 *** TODO line commands [0/3]
 - [ ] goto/select to end of line
 - [ ] goto/select to beginning of line

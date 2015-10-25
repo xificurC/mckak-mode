@@ -1,6 +1,7 @@
 (require 'multiple-cursors)
 (require 'cl)
 (require 'mk-macros)
+(require 'phi-search)
 
 (mk/defmotion to-next-word-start ()
   "word start"
@@ -98,6 +99,9 @@
 (define-key mckak-mode-map "F"         'mk/extend-to-next-found-char)
 (define-key mckak-mode-map (kbd "M-f") 'mk/select-to-previous-found-char)
 (define-key mckak-mode-map (kbd "M-F") 'mk/extend-to-previous-found-char)
+(define-key mckak-mode-map "/"         'phi-search)
+(define-key mckak-mode-map "?"         'phi-search-backward)
+
 
 (dotimes (i 10)
   (define-key mckak-mode-map (number-to-string i) 'digit-argument))
