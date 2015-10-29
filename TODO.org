@@ -22,6 +22,8 @@
 - [ ] q
 - [ ] g
 - [ ] u
+*** TODO explore toggle for word, symbol and WORD
+I think creating a toggle would be nice to keep the bindings simple yet provide the option to move by words, symbols or WORDS.
 ** TODO Editing commands [0/0]
 - [ ] c
 - [ ] d

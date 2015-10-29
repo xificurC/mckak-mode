@@ -101,6 +101,7 @@
 (define-key mckak-mode-map (kbd "M-F") 'mk/extend-to-previous-found-char)
 (define-key mckak-mode-map "/"         'phi-search)
 (define-key mckak-mode-map "?"         'phi-search-backward)
+(define-key mckak-mode-map "%"         'mark-whole-buffer)
 
 
 (dotimes (i 10)

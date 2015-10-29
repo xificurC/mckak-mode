@@ -1,7 +1,9 @@
+(require 'multiple-cursors-core)
+
 (defmacro mk/extend-selection (&rest body)
   "Extends the current selection."
   (declare (indent 0))
-  (let ((pnt (gensym "POINT")))
+  (let ((pnt (make-symbol "POINT")))
     `(let ((,pnt (save-excursion (progn ,@body (point)))))
        (unless mark-active
          (set-mark (point)))
@@ -10,7 +12,7 @@
 (defmacro mk/create-selection (&rest body)
   "Creates a selection starting from point."
   (declare (indent 0))
-  (let ((pnt (gensym "POINT")))
+  (let ((pnt (make-symbol "POINT")))
     `(let ((,pnt (save-excursion (progn ,@body (point)))))
        (set-mark (point))
        (goto-char ,pnt))))
@@ -18,7 +20,7 @@
 (defmacro mk/move (&rest body)
   "Ensures there's no active selection after running BODY."
   (declare (indent 0))
-  (let ((pnt (gensym "POINT")))
+  (let ((pnt (make-symbol "POINT")))
     `(let ((,pnt (save-excursion (progn ,@body (point)))))
        (deactivate-mark)
        (goto-char ,pnt))))
@@ -49,7 +51,10 @@
        ,inter
        (setq count (or count 1))
        (dotimes (_ count)
-         ,body))))
+         (mc/execute-command-for-all-cursors
+          (lambda ()
+            (interactive)
+            ,body))))))
 
 (defmacro mk/defmotion (name args doc motions &rest body)
   "Generates definitions for MOTIONS.
