@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 (require 'multiple-cursors)
 (require 'cl)
 (require 'mk-macros)
@@ -51,27 +53,30 @@
   (move extend)
   (previous-line))
 
-(mk/defmotion to-next-found-char (char &optional count)
-  "found character"
-  (select extend)
-  (interactive "cChar:\np")
-  (let ((start (point)) case-fold-search)
-    (condition-case nil
-        (progn
-          (mk/move-to-next-char)
-          (search-forward (char-to-string char) (line-end-position)))
-      (error (goto-char start)))))
+(defun mk--generate-select-to-next-found-char (char count)
+  (lambda ()
+    (interactive)
+    (dotimes (_ count)
+      (mk/create-selection
+        (let ((start (point)) case-fold-search)
+          (condition-case nil
+              (progn
+                (mk/move-to-next-char)
+                (search-forward (char-to-string char) (line-end-position)))
+            (error (goto-char start))))))))
 
-(mk/defmotion to-previous-found-char (char &optional count)
-  "previous found character"
-  (select extend)
+(defun mk/select-to-next-found-char (char &optional count)
+  "Selects COUNT'th found character"
   (interactive "cChar:\np")
-  (let ((start (point)) case-fold-search)
-    (condition-case nil
-        (progn
-          (mk/move-to-previous-char)
-          (search-backward (char-to-string char) (line-beginning-position)))
-      (error (goto-char start)))))
+  (setq count (or count 1))
+  (let ((cmd (mk--generate-select-to-next-found-char char count)))
+    (call-interactively cmd)
+    (setq this-command cmd
+          this-original-command cmd
+          mc--this-command cmd)))
+(add-to-list 'mc/cmds-to-run-for-all 'mk/select-to-next-found-char)
+
+(add-to-list 'mc/cmds-to-run-for-all 'mk/extend-to-next-found-char)
 
 (defvar mckak-mode-map (make-sparse-keymap) "McKak mode's keymap")
 (suppress-keymap mckak-mode-map)
