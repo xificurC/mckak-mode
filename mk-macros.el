@@ -42,19 +42,19 @@
          (body (case motion
                  (select `(mk/create-selection ,@body))
                  (extend `(mk/extend-selection ,@body))
-                 (move `(mk/move ,@body)))))
-    `(defun ,(symb 'mk/ motion '- name) ,args
-       ,(ecase motion
-          (select (mkstr "Selects COUNT'th " doc))
-          (extend (mkstr "Extends current selection to COUNT'th " doc))
-          (move (mkstr "Moves to COUNT'th " doc)))
-       ,inter
-       (setq count (or count 1))
-       (dotimes (_ count)
-         (mc/execute-command-for-all-cursors
-          (lambda ()
-            (interactive)
-            ,body))))))
+                 (move `(mk/move ,@body))))
+         (fun-name (symb 'mk/ motion '- name)))
+    `(progn
+       (defun ,fun-name ,args
+         ,(ecase motion
+            (select (mkstr "Selects COUNT'th " doc))
+            (extend (mkstr "Extends current selection to COUNT'th " doc))
+            (move (mkstr "Moves to COUNT'th " doc)))
+         ,inter
+         (setq count (or count 1))
+         (dotimes (_ count)
+           ,body))
+       (add-to-list 'mc/cmds-to-run-for-all ',fun-name))))
 
 (defmacro mk/defmotion (name args doc motions &rest body)
   "Generates definitions for MOTIONS.
