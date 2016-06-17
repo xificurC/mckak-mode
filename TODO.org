@@ -10,8 +10,8 @@
 - [ ] goto/select to end of line
 - [ ] goto/select to beginning of line
 - [ ] extend selection to whole line
-*** TODO other commands [0/11]
-- [ ] % - select whole buffer
+*** TODO other commands [1/11]
+- [X] % - select whole buffer
 - [ ] ` - change case
 - [ ] ' - rotate main selection
 - [ ] ; - reduce selections to their cursor
@@ -24,14 +24,17 @@
 - [ ] u
 *** TODO explore toggle for word, symbol and WORD
 I think creating a toggle would be nice to keep the bindings simple yet provide the option to move by words, symbols or WORDS.
-** TODO Editing commands [0/0]
+** TODO Editing commands [1/6]
 - [ ] c
-- [ ] d
+- [X] d
 - [ ] i
 - [ ] a
 - [ ] r
 - [ ] R
-** TODO Minor mode setup
+** DONE Minor mode setup
+   CLOSED: [2016-06-17 Fri 23:11]
 Right now the minor mode is simply run globally which is, well, bad :) It should only run on /normal/ buffers, i.e. skip minibuffer, special modes, stuff like that. Maybe we should look into how evil does this.
-** Spacemacs integration
+** TODO evil integration?
+Evil allows defining a new state (like it has normal, insert, motion etc.). Maybe we could define a new state for our code and that way inject us into evil? It is a mature library that surely solves many issues. Integration might not be that simple though. For now it would be enough to check how bindings like =c= or =i= change the state and see if we could use that. That way we would have a working insert mode and would only need to set our state as the default for evil.
+** TODO Spacemacs integration
 Ideally this would be another editing style, but not sure if that's possible. For now (I THINK) it would be enough to provide a spacemacs layer that could be enabled in emacs mode. This way we could simply include this mode and possibly fall back to some of evil's nicities later.
