@@ -107,7 +107,9 @@
 (define-key mckak-local-mode-map "/"         'phi-search)
 (define-key mckak-local-mode-map "?"         'phi-search-backward)
 (define-key mckak-local-mode-map "%"         'mark-whole-buffer)
+(define-key mckak-local-mode-map "d"         'kill-region)
 
+(add-to-list 'mc/cmds-to-run-for-all 'kill-region)
 
 (dotimes (i 10)
   (define-key mckak-local-mode-map (number-to-string i) 'digit-argument))
