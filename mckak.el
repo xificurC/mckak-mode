@@ -4,6 +4,7 @@
 (require 'cl)
 (require 'mk-macros)
 (require 'phi-search)
+(require 'evil-core)
 
 (mk/defmotion to-next-word-start ()
   "word start"
@@ -78,53 +79,80 @@
 
 (add-to-list 'mc/cmds-to-run-for-all 'mk/extend-to-next-found-char)
 
-(defvar mckak-local-mode-map (make-sparse-keymap) "McKak mode's keymap")
-(suppress-keymap mckak-local-mode-map)
-(define-key mckak-local-mode-map "w"         'mk/select-to-next-word-start)
-(define-key mckak-local-mode-map "e"         'mk/select-to-next-word-end)
-(define-key mckak-local-mode-map "j"         'mk/move-to-next-line)
-(define-key mckak-local-mode-map "k"         'mk/move-to-previous-line)
-(define-key mckak-local-mode-map "h"         'mk/move-to-previous-char)
-(define-key mckak-local-mode-map "l"         'mk/move-to-next-char)
-(define-key mckak-local-mode-map "b"         'mk/select-to-previous-word-start)
-(define-key mckak-local-mode-map "v"         'mk/select-to-previous-word-end)
-(define-key mckak-local-mode-map "f"         'mk/select-to-next-found-char)
-(define-key mckak-local-mode-map "N"         'mc/mark-next-like-this)
-(define-key mckak-local-mode-map (kbd "M-s") 'mc/edit-lines)
-(define-key mckak-local-mode-map "s"         'mc/mark-all-in-region-regexp)
-(define-key mckak-local-mode-map "&"         'mc/vertical-align-with-space)
-(define-key mckak-local-mode-map "W"         'mk/extend-to-next-word-start)
-(define-key mckak-local-mode-map "E"         'mk/extend-to-next-word-end)
-(define-key mckak-local-mode-map "J"         'mk/extend-to-next-line)
-(define-key mckak-local-mode-map "K"         'mk/extend-to-previous-line)
-(define-key mckak-local-mode-map "H"         'mk/extend-to-previous-char)
-(define-key mckak-local-mode-map "L"         'mk/extend-to-next-char)
-(define-key mckak-local-mode-map "B"         'mk/extend-to-previous-word-start)
-(define-key mckak-local-mode-map "V"         'mk/extend-to-previous-word-end)
-(define-key mckak-local-mode-map "F"         'mk/extend-to-next-found-char)
-(define-key mckak-local-mode-map (kbd "M-f") 'mk/select-to-previous-found-char)
-(define-key mckak-local-mode-map (kbd "M-F") 'mk/extend-to-previous-found-char)
-(define-key mckak-local-mode-map "/"         'phi-search)
-(define-key mckak-local-mode-map "?"         'phi-search-backward)
-(define-key mckak-local-mode-map "%"         'mark-whole-buffer)
-(define-key mckak-local-mode-map "d"         'kill-region)
+(evil-define-state mckak
+  "McKak state."
+  :tag " <K> "
+  :suppress-keymap t
+  (progn
+    (remove-hook 'activate-mark-hook 'evil-visual-activate-hook t)))
 
-(add-to-list 'mc/cmds-to-run-for-all 'kill-region)
+(add-to-list 'mc/cmds-to-run-once 'evil-mckak-state)
+
+(setq evil-default-state 'mckak)
+(define-key evil-insert-state-map [escape] 'evil-mckak-state)
+
+(setq evil-mckak-state-map (copy-keymap evil-normal-state-map))
+(define-key evil-mckak-state-map "w"         'mk/select-to-next-word-start)
+(define-key evil-mckak-state-map "e"         'mk/select-to-next-word-end)
+(define-key evil-mckak-state-map "j"         'mk/move-to-next-line)
+(define-key evil-mckak-state-map "k"         'mk/move-to-previous-line)
+(define-key evil-mckak-state-map "h"         'mk/move-to-previous-char)
+(define-key evil-mckak-state-map "l"         'mk/move-to-next-char)
+(define-key evil-mckak-state-map "b"         'mk/select-to-previous-word-start)
+(define-key evil-mckak-state-map "v"         'mk/select-to-previous-word-end)
+(define-key evil-mckak-state-map "f"         'mk/select-to-next-found-char)
+(define-key evil-mckak-state-map "C"         'mc/mark-next-like-this)
+(define-key evil-mckak-state-map (kbd "M-s") 'mc/edit-lines)
+(define-key evil-mckak-state-map "s"         'mc/mark-all-in-region-regexp)
+(define-key evil-mckak-state-map "&"         'mc/vertical-align-with-space)
+(define-key evil-mckak-state-map "W"         'mk/extend-to-next-word-start)
+(define-key evil-mckak-state-map "E"         'mk/extend-to-next-word-end)
+(define-key evil-mckak-state-map "J"         'mk/extend-to-next-line)
+(define-key evil-mckak-state-map "K"         'mk/extend-to-previous-line)
+(define-key evil-mckak-state-map "H"         'mk/extend-to-previous-char)
+(define-key evil-mckak-state-map "L"         'mk/extend-to-next-char)
+(define-key evil-mckak-state-map "B"         'mk/extend-to-previous-word-start)
+(define-key evil-mckak-state-map "V"         'mk/extend-to-previous-word-end)
+(define-key evil-mckak-state-map "F"         'mk/extend-to-next-found-char)
+(define-key evil-mckak-state-map (kbd "M-f") 'mk/select-to-previous-found-char)
+(define-key evil-mckak-state-map (kbd "M-F") 'mk/extend-to-previous-found-char)
+(define-key evil-mckak-state-map "/"         'phi-search)
+(define-key evil-mckak-state-map "?"         'phi-search-backward)
+(define-key evil-mckak-state-map "%"         'mark-whole-buffer)
+
+(defun mk/kill-region ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'kill-region)
+    (call-interactively 'delete-char)))
+
+(defun mk/change-region ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'kill-region)
+    (call-interactively 'delete-char))
+  (evil-insert-state 1))
+
+(define-key evil-mckak-state-map "d"         'mk/kill-region)
+(define-key evil-mckak-state-map "c"         'mk/change-region)
+
+(add-to-list 'mc/cmds-to-run-for-all 'mk/kill-region)
+(add-to-list 'mc/cmds-to-run-for-all 'mk/change-region)
 
 (dotimes (i 10)
-  (define-key mckak-local-mode-map (number-to-string i) 'digit-argument))
-(global-set-key [escape] 'mckak-local-mode)
+  (define-key evil-mckak-state-map (number-to-string i) 'digit-argument))
+;; (global-set-key [escape] 'mckak-local-mode)
 
-(define-minor-mode mckak-local-mode
-  "McKak mode - vim meets multiple cursors."
-  :keymap mckak-local-mode-map)
+;; (define-minor-mode mckak-local-mode
+;;   "McKak mode - vim meets multiple cursors."
+;;   :keymap evil-mckak-state-map)
 
-(defun mckak-initialize ()
-  (unless (minibufferp)
-    (mckak-local-mode 1)))
+;; (defun mckak-initialize ()
+;;   (unless (minibufferp)
+;;     (mckak-local-mode 1)))
 
-;;;### autoload
-(define-globalized-minor-mode mckak-mode
-  mckak-local-mode mckak-initialize)
+;; ;;;### autoload
+;; (define-globalized-minor-mode mckak-mode
+;;   mckak-local-mode mckak-initialize)
 
 (provide 'mckak)
