@@ -84,6 +84,10 @@
   :tag " <K> "
   :suppress-keymap t
   (progn
+    ;; TODO with the setq evil-default-state lower evil starts with mckak state
+    ;; however this remove-hook only gets called after re-entering it.
+    ;; This makes the first e.g. `w' call flip into visual state,
+    ;; which is exactly what we are trying to avoid.
     (remove-hook 'activate-mark-hook 'evil-visual-activate-hook t)))
 
 (add-to-list 'mc/cmds-to-run-once 'evil-mckak-state)
@@ -101,7 +105,7 @@
 (define-key evil-mckak-state-map "b"         'mk/select-to-previous-word-start)
 (define-key evil-mckak-state-map "v"         'mk/select-to-previous-word-end)
 (define-key evil-mckak-state-map "f"         'mk/select-to-next-found-char)
-(define-key evil-mckak-state-map "C"         'mc/mark-next-like-this)
+(define-key evil-mckak-state-map "N"         'mc/mark-next-like-this)
 (define-key evil-mckak-state-map (kbd "M-s") 'mc/edit-lines)
 (define-key evil-mckak-state-map "s"         'mc/mark-all-in-region-regexp)
 (define-key evil-mckak-state-map "&"         'mc/vertical-align-with-space)
@@ -133,11 +137,31 @@
     (call-interactively 'delete-char))
   (evil-insert-state 1))
 
+;; TODO keep the regions untouched
+;; or expand them, still to be decided.
+(defun mk/insert ()
+  (interactive)
+  (when (region-active-p)
+    (goto-char (region-beginning)))
+  (evil-insert-state 1))
+
+;; TODO keep and expand the region.
+(defun mk/append ()
+  (interactive)
+  (if (region-active-p)
+      (goto-char (region-end))
+    (goto-char (1+ (point))))
+  (evil-insert-state 1))
+
 (define-key evil-mckak-state-map "d"         'mk/kill-region)
 (define-key evil-mckak-state-map "c"         'mk/change-region)
+(define-key evil-mckak-state-map "i"         'mk/insert)
+(define-key evil-mckak-state-map "a"         'mk/append)
 
 (add-to-list 'mc/cmds-to-run-for-all 'mk/kill-region)
 (add-to-list 'mc/cmds-to-run-for-all 'mk/change-region)
+(add-to-list 'mc/cmds-to-run-for-all 'mk/insert)
+(add-to-list 'mc/cmds-to-run-for-all 'mk/append)
 
 (dotimes (i 10)
   (define-key evil-mckak-state-map (number-to-string i) 'digit-argument))

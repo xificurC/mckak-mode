@@ -24,17 +24,20 @@
 - [ ] u
 *** TODO explore toggle for word, symbol and WORD
 I think creating a toggle would be nice to keep the bindings simple yet provide the option to move by words, symbols or WORDS.
-** TODO Editing commands [1/6]
-- [ ] c
+** TODO Editing commands [4/6]
+- [X] c
 - [X] d
-- [ ] i
-- [ ] a
+- [X] i
+- [X] a
 - [ ] r
 - [ ] R
 ** DONE Minor mode setup
    CLOSED: [2016-06-17 Fri 23:11]
 Right now the minor mode is simply run globally which is, well, bad :) It should only run on /normal/ buffers, i.e. skip minibuffer, special modes, stuff like that. Maybe we should look into how evil does this.
-** TODO evil integration?
+** DONE evil integration?
+   CLOSED: [2016-06-21 Tue 22:31]
 Evil allows defining a new state (like it has normal, insert, motion etc.). Maybe we could define a new state for our code and that way inject us into evil? It is a mature library that surely solves many issues. Integration might not be that simple though. For now it would be enough to check how bindings like =c= or =i= change the state and see if we could use that. That way we would have a working insert mode and would only need to set our state as the default for evil.
 ** TODO Spacemacs integration
 Ideally this would be another editing style, but not sure if that's possible. For now (I THINK) it would be enough to provide a spacemacs layer that could be enabled in emacs mode. This way we could simply include this mode and possibly fall back to some of evil's nicities later.
+** TODO Point and region cooperation
+When a region is selected point sits *after* it, which is not the case in evil. Maybe we can fall back on their implementation? Or we can keep the implementation simple for now and see what comes.
